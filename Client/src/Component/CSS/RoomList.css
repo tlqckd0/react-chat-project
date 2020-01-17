@@ -8,6 +8,7 @@
     width:800px;
     height: 720px;
     overflow: scroll;
+    box-shadow: grey 2px 2px 3px,grey -2px -2px 3px;
 }
 
 #roomManage{

@@ -13,7 +13,7 @@ class MainPage extends React.Component {
             Rooms: [],
             enterRoom: false,
             enterRoomNum: 0,
-            chattingMessages:['안녕하세요, 반가워요 ㅎㅎ'],
+            chattingMessages:[{who:'system',message:'안녕하세요, 반가워요 ㅎㅎ'}],
             socket:io(`/${0}`, { transports: ['polling'],forceNew: true })
         }
     }
@@ -30,11 +30,16 @@ class MainPage extends React.Component {
         const {socket} = this.state;
         socket.on('connect',()=>{
             socket.on('hi',(msg)=>{
+                //서버에서 보내주는거
                 this.handleGetMessageFromServer(msg,true);
             })
             socket.on('chat',(msg)=>{
+                //사람끼리 이야기하는거
                 this.handleGetMessageFromServer(msg,false);
             })
+        })
+        socket.on('error',(error)=>{
+            this.handleGetMessageFromServer('서버와의 연결이 되지않습니다.', true);
         })
     }
     //채팅 메시지 보내는거
@@ -46,18 +51,27 @@ class MainPage extends React.Component {
     //채팅 메시지 받는거
     handleGetMessageFromServer = (msg, signal) => {
         const { chattingMessages } = this.state;
+        let messageObj = {who:'',message:''};
 
         if (signal) {
             //서버신호 -> 방입장
+            messageObj.who = 'system';
+            messageObj.message = msg;
             this.setState({
-                chattingMessages: chattingMessages.concat(msg)
+                chattingMessages: chattingMessages.concat(messageObj)
             })
             return;
         }
         //사람신호 -> 채팅
-        const { email, message } = JSON.parse(msg);
+        let { email, message } = JSON.parse(msg);
+        if(email === this.props.email){
+            messageObj.who="me";
+        }else{
+            messageObj.who=email;
+        }
+        messageObj.message = message;
         this.setState({
-            chattingMessages: chattingMessages.concat(`${email} : ${message}`)
+            chattingMessages: chattingMessages.concat(messageObj)
         })
     }
     //방 정보들을 서버로 부터 얻음
@@ -73,7 +87,12 @@ class MainPage extends React.Component {
     }
     //방 만드는 함수
     handleMakeRoom = () => {
-        post('/makeRoom', { roomName: 'test-Room-Maker' })
+        const roomName = prompt('방제목을 입력해주세요');
+        if(roomName.length === 0 || roomName === null){
+            alert('방 제목은 필수입니다!');
+            return;
+        }
+        post('/makeRoom', { roomName })
             .then(res => {
                 this.handleEnterRoom(res.data.roomNumber);
             })
@@ -84,7 +103,7 @@ class MainPage extends React.Component {
         this.setState({
             enterRoom: true,
             enterRoomNum: roomNum,
-            chattingMessages:[`${roomNum}번 방에 입장하셨습니다!`]
+            chattingMessages:[{who:'system',message:`${roomNum}번 방에 입장하셨습니다!`}]
         },()=>this.handleChangeSocket(roomNum));
     }
     //채팅방 퇴장 (RoomPage -> MainPage) 이동
@@ -92,7 +111,7 @@ class MainPage extends React.Component {
         this.setState({
             enterRoom: false,
             enterRoomNum: 0,
-            chattingMessages:['메인 채팅방입니다~']
+            chattingMessages:[{who:'system',message:`매인화면 입니다!`}]
         },()=>this.handleChangeSocket(0))        
     }
 
@@ -120,7 +139,7 @@ class MainPage extends React.Component {
                     />
                 }
                 <div id="rightSide">
-                    <UserInfo nick={'tester'} />
+                    <UserInfo nick={email} />
                     <Chat
                         email={email}
                         sendMessage={this.handleSendMessageToServer}

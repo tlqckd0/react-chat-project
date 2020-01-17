@@ -11,15 +11,11 @@ class Room{
                 console.log(`${this.roomNumber}번 방에서 채팅`)
                 nsp.emit('chat', msg);
             })    
-            nsp.on('disconnect', () => {
-                console.log('1번 오류')
+            socket.on('disconnect', (reason) => {
+                console.log('오류',reason);
                 this.numOfPlayer--;
             })
-            nsp.on('disconnecting', () => {
-                console.log('2번 오류');
-                this.numOfPlayer--;
-            })
-            nsp.on('error', (error) => {
+            socket.on('error', (error) => {
                 console.error(error);
             });
         })

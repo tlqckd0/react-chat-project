@@ -46,7 +46,17 @@ class Chat extends React.Component {
         const {message,chatKey} = this.state;
         let num = chatKey;
         const chattingList = this.props.chattingMessages.map(
-            chatting=>(<li key={num++}className="msg">{chatting}</li>)
+            (chatting)=>{
+                let type = '';
+                if(chatting.who === 'system'){
+                    type='system-msg';
+                }else if(chatting.who === 'me'){
+                    type='my-msg';
+                }else{
+                    type='others-msg';
+                }
+                return (<li key={num++} className={`msg ${type}`}>{chatting.who} : {chatting.message}</li>)
+            }
         );
 
         return (
