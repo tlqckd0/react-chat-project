@@ -1,0 +1,35 @@
+#chatting-room{
+    display: inline-block;
+    background-color: white;
+    margin: 0px;
+    padding: 10px;
+    border: 1px solid black;
+    width:400px;
+    height: 500px;
+}
+#chatting-message{
+    overflow: auto;
+    list-style-type: none;
+    height: 450px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
+    border: 1px solid black;
+}
+
+#my-message{
+    display: flex;
+}
+.send-message{
+   margin: 2px; 
+}
+.message{
+    width: 100%;
+}
+.msg{
+    border: 1px black solid;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+}
