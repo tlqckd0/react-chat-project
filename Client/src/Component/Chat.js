@@ -42,6 +42,7 @@ class Chat extends React.Component {
     }
 
     render() {
+        console.log('render chat');
         const {handleValueChange,handleKeyPress} = this;
         const {message,chatKey} = this.state;
         let num = chatKey;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { post } from 'axios';
 import io from 'socket.io-client';
-import RoomList from '../Component/RoomList';
+import RoomLayout from '../Component/RoomLayout';
 import Chat from '../Component/Chat';
 import UserInfo from '../Component/UserInfo';
 import GameLayout from '../Component/GameLayout';
@@ -17,6 +17,13 @@ class MainPage extends React.Component {
             socket:io(`/${0}`, { transports: ['polling'],forceNew: true })
         }
     }
+
+    handleValueChange = (e)=>{
+        this.setState({
+            [e.target.name]:e.target.value
+        })
+    }
+    //소켓 namespace변경
     handleChangeSocket = (roomNum)=>{
         //this.state.socket.disconnect();
         const exSocket = this.state.socket;
@@ -26,6 +33,7 @@ class MainPage extends React.Component {
             socket
         },()=>this.handleConnectSocket());
     }
+    //소켓 연결하기
     handleConnectSocket = ()=>{
         const {socket} = this.state;
         socket.on('connect',()=>{
@@ -127,7 +135,7 @@ class MainPage extends React.Component {
         return (
             <div id="main-wrap">
                 {enterRoom === false
-                    ? <RoomList
+                    ? <RoomLayout
                         makeRoom={this.handleMakeRoom}
                         enterRoom={this.handleEnterRoom}
                         GetRoomsInfo={this.handleGetRoomsInfo}
