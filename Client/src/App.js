@@ -1,16 +1,29 @@
 import React from 'react';
-import './App.css';
-
 import LoginPage from './Page/LoginPage';
 import MainPage from './Page/MainPage';
+import { withStyles } from '@material-ui/core/styles';
 
+const styles = {
+  app: {
+    textAlign: 'center'
+  },
+  bodyWrap: {
+    border: '1px rgb(248, 247, 247) solid',
+    width: 1280,
+    height: 720,
+    margin: 0,
+    padding: 10,
+    position: 'relative',
+    backgroundColor: '#b6d0fa'
+  }
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       login: false,
-      email: '',
+      email: 'tester',
       password: ''
     }
   }
@@ -22,23 +35,26 @@ class App extends React.Component {
       login: true,
       email, password
     })
+    return true;
   }
 
   render() {
+    const { classes } = this.props;
     const { email, login } = this.state;
     return (
-      <div className="App">
-        <div id="body-wrap">
-          {login === false
-            ? <LoginPage handleLogin={this.handleLogin} page={'LoginPage'} />
-            : <MainPage
-              email={email}
-            />
-          }
-        </div>
+      <div className={classes.app}>
+        {login === false
+          ? <LoginPage handleLogin={this.handleLogin} page={'LoginPage'} />
+          : <div className={classes.bodyWrap}>
+              <MainPage
+                email={email}
+              />
+            </div>
+        }
+
       </div>
     )
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

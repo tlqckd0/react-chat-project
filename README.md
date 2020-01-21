@@ -1,4 +1,7 @@
-## create-react-app과 socket.io를 이용한 채팅앱 만들어보기
+## create-react-app, socket.io와 express서버를 이용한 채팅앱 만들어보기
+
+# 2020년 1월 21일
+ material ui 적용 / css 삭제 react style로 변경했음
 
 # 2020년 1월 20일
  RoomList 보여주는 component에서 방 제목 검색기능 + 컴포넌트 분리

@@ -7,7 +7,6 @@ function ChattingSocket(io,roomName) {
 
         //체팅방에서 받은거를 보내기
         socket.on('chat', (msg) => {
-            console.log('메인화면 채팅')
             nsp.emit('chat', msg);
         })
 

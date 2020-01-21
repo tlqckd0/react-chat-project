@@ -16,11 +16,14 @@ class RoomManager{
         return roomList;
     }
     checkRoom = ()=>{
+        console.log('방 확인')
         this.Rooms.map(room=>{
             if(room.numOfPlayer === 0){
                 console.log('빈방 삭제: ', room.getInfo())
                 const idx = this.Rooms.findIndex(_room=>_room.roomNumber === room.roomNumber);
                 this.Rooms.splice(idx,1);
+            }else{
+                console.log(room.getInfo())
             }
         })
     }

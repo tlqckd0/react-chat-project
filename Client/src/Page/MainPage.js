@@ -53,7 +53,8 @@ class MainPage extends React.Component {
     //채팅 메시지 보내는거
     handleSendMessageToServer = (message) => {
         const {socket} = this.state;
-        socket.emit('chat', JSON.stringify({ email: this.props.email, message: message }));
+        const time = new Date().toLocaleTimeString();
+        socket.emit('chat', JSON.stringify({ email: this.props.email, message,time}));
     }
 
     //채팅 메시지 받는거
@@ -71,13 +72,14 @@ class MainPage extends React.Component {
             return;
         }
         //사람신호 -> 채팅
-        let { email, message } = JSON.parse(msg);
+        let { email, message,time } = JSON.parse(msg);
         if(email === this.props.email){
             messageObj.who="me";
         }else{
             messageObj.who=email;
         }
         messageObj.message = message;
+        messageObj.time=time;
         this.setState({
             chattingMessages: chattingMessages.concat(messageObj)
         })
@@ -96,7 +98,10 @@ class MainPage extends React.Component {
     //방 만드는 함수
     handleMakeRoom = () => {
         const roomName = prompt('방제목을 입력해주세요');
-        if(roomName.length === 0 || roomName === null){
+        if(roomName === null){
+            return;
+        }
+        if(roomName.length === 0){
             alert('방 제목은 필수입니다!');
             return;
         }
@@ -133,7 +138,7 @@ class MainPage extends React.Component {
         const { Rooms ,chattingMessages,enterRoom} = this.state;
         const { email } = this.props;
         return (
-            <div id="main-wrap">
+            <div id="main-wrap" style={{display:'flex'}}>
                 {enterRoom === false
                     ? <RoomLayout
                         makeRoom={this.handleMakeRoom}

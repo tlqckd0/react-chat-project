@@ -1,6 +1,5 @@
 import React from 'react';
 import Login from '../Component/Login'
-
 class LoginPage extends React.Component{
     render(){
         return(

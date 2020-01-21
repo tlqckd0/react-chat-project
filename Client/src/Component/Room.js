@@ -1,15 +1,32 @@
 import React from 'react';
-import './CSS/Room.css'
+import Paper from '@material-ui/core/Paper';
+import withStyles from '@material-ui/core/styles/withStyles'
+
+const styles = theme=>({
+    room:{
+        width:'96%',
+        margin:theme.spacing(1),
+        padding:theme.spacing(1),
+        background: '#7B68EE',
+        border: '2px white solid',
+        boxShadow: '0 3px 5px 2px grey',
+        color: 'white',
+        fontWeight:600,
+        '&:hover':{
+            backgroundColor:'black'
+        }
+    }
+})
 
 class Room extends React.Component{
-    handleEnterRoom = ()=>{
+    handleEnterRoom = ()=>{ 
         const {roomNumber, enterRoom} =this.props;
         enterRoom(roomNumber);
     }
     render(){
-        const {roomNumber, roomName, numOfPlayer} =  this.props;
+        const {roomNumber, roomName, numOfPlayer,classes} =  this.props;
         return(
-            <div className="room" onClick={this.handleEnterRoom}>
+            <Paper className={classes.room} onClick={this.handleEnterRoom} elevation={3} >
                 <div className="roomNumber">
                     {roomNumber}
                 </div>
@@ -19,9 +36,9 @@ class Room extends React.Component{
                 <div className="numOfPlayer">
                     {numOfPlayer} / 4
                 </div>
-            </div>
+            </Paper>
         )
     }
 }
 
-export default Room;
+export default withStyles(styles)(Room);
