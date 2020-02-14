@@ -1,5 +1,5 @@
 import React from 'react';
-import { post } from 'axios';
+import { post , get} from 'axios';
 import io from 'socket.io-client';
 import RoomLayout from '../Component/RoomLayout';
 import Chat from '../Component/Chat';
@@ -25,7 +25,6 @@ class MainPage extends React.Component {
     }
     //소켓 namespace변경
     handleChangeSocket = (roomNum)=>{
-        //this.state.socket.disconnect();
         const exSocket = this.state.socket;
         exSocket.disconnect();
         const socket = io(`/${roomNum}`, { transports: ['polling'],forceNew: true });
@@ -86,7 +85,7 @@ class MainPage extends React.Component {
     }
     //방 정보들을 서버로 부터 얻음
     handleGetRoomsInfo = () => {
-        post('/api/roomList')
+        get('/roomList')
             .then(res => {
                 const Rooms = res.data;
                 this.setState({
@@ -113,11 +112,18 @@ class MainPage extends React.Component {
     }
     //채팅방 입장 (MainPage -> RoomPage) 이동
     handleEnterRoom = (roomNum) => {
-        this.setState({
-            enterRoom: true,
-            enterRoomNum: roomNum,
-            chattingMessages:[{who:'system',message:`${roomNum}번 방에 입장하셨습니다!`}]
-        },()=>this.handleChangeSocket(roomNum));
+        post('/enterRoom',{roomNum})
+            .then(res=>{
+                if(res.data.result !== true){
+                    alert('방이 꽉 찼습니당..');
+                }else{
+                    this.setState({
+                        enterRoom: true,
+                        enterRoomNum: roomNum,
+                        chattingMessages:[{who:'system',message:`${roomNum}번 방에 입장하셨습니다!`}]
+                    },()=>this.handleChangeSocket(roomNum));
+                }
+            });
     }
     //채팅방 퇴장 (RoomPage -> MainPage) 이동
     handleLeaveRoom =  () =>  {

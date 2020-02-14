@@ -1,5 +1,8 @@
 ## create-react-app, socket.io와 express서버를 이용한 채팅앱 만들어보기
 
+# 2020년 2월 14일
+ 방인원 초과시 입장불가 + 서버부분 router분리
+
 # 2020년 1월 21일
  material ui 적용 / css 삭제 react style로 변경했음
 

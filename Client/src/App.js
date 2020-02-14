@@ -23,17 +23,16 @@ class App extends React.Component {
     super(props);
     this.state = {
       login: false,
-      email: 'tester',
-      password: ''
+      email: 'tester'
     }
   }
 
   //로그인
-  handleLogin = (email, password) => {
+  handleLogin = (email) => {
     //나중에 passport.js 이용해서 구현하자 근대 어캐 연결하지??
     this.setState({
       login: true,
-      email, password
+      email
     })
     return true;
   }

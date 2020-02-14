@@ -29,8 +29,7 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            password: '',
+            email: ''
         }
         this.handleValueChange = this.handleValueChange.bind(this);
     }
@@ -41,22 +40,29 @@ class Login extends React.Component {
     }
     handleLogin = () => {
         //로그인 처리
-        const { email, password } = this.state;
-        if(email==='' || password===''){
-            alert('이메일과 비밀번호를 입력해주세요');
+        const { email } = this.state;
+        if(email==='' ){
+            alert('닉네임을 입력해주세요~');
         }
-        const result =  this.props.handleLogin(email, password);
+        const result =  this.props.handleLogin(email);
         if(result === true){
             alert('환영합니다!');
         }else{
-            alert('회원정보가 정확하지 않습니다.');
+            alert('오류 발생!');
         }
     }
 
+    handleKeyPress = (e) => {
+        if (e.charCode === 13) {
+            this.handleLogin();
+        }
+        return false;
+    }
+
     render() {
-        const { email, password } = this.state;
+        const { email } = this.state;
         const { classes } = this.props;
-        const { handleValueChange, handleLogin } = this;
+        const { handleValueChange, handleLogin,handleKeyPress } = this;
         return (
             <Paper className={classes.loginWrap} elevation={3}>
                 <span>시작하기</span>
@@ -64,27 +70,19 @@ class Login extends React.Component {
                     <TextField
                         className={classes.textField}
                         id="email-text"
-                        label="이메일"
-                        type="email"
+                        label="닉네임"
                         variant="outlined"
                         value={email}
                         name='email'
                         onChange={handleValueChange}
+                        onKeyPress={handleKeyPress}
                         required='true'
                     />
-                    <TextField
-                        className={classes.textField}
-                        id="password-text"
-                        label="비밀번호"
-                        type="password"
-                        variant="outlined"
-                        value={password}
-                        name='password'
-                        onChange={handleValueChange}
-                        required='true'
-                    />
-                    <Button className={classes.loginButton} variant="contained" color="primary" onClick={handleLogin}>로그인</Button>
-                    <Button className={classes.loginButton} variant="contained" color="secondary" >회원가입하기</Button>
+                    <Button 
+                        className={classes.loginButton} 
+                        variant="contained" color="primary" 
+                        onClick={handleLogin}
+                    >접속하기!</Button>
                 </form>
             </Paper>
         )
