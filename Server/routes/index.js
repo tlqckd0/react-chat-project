@@ -10,7 +10,7 @@ module.exports = function(roomManager){
             console.error(err)
         }
     })
-    
+    //방 입장
     router.post('/enterRoom',(req,res,next)=>{
         try{
             res.json({result:roomManager.enterRoom(req.body.roomNum)});

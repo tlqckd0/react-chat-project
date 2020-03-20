@@ -16,20 +16,17 @@ const styles = {
     }
 }
 
-class UserInfo extends React.Component{
-    render(){
-        const {nick,classes} = this.props;
-        return(
-            <Paper className={classes.userInfo}>
-                <div>
-                    nick : {nick}
-                </div>
-                <div>
-                    안뇽 ㅋㅋ
-                </div>
-            </Paper>
-        )
-    }
+const UserInfo = ({nick,classes})=>{
+    return(
+        <Paper className={classes.userInfo}>
+            <div>
+                nick : {nick}
+            </div>
+            <div>
+                안뇽 ㅋㅋ
+            </div>
+        </Paper>
+    )
 }
 
 export default withStyles(styles)(UserInfo);

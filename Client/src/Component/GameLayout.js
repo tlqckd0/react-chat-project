@@ -32,21 +32,18 @@ const styles = theme=>({
     },
 });
 
-class GameLayout extends React.Component{
-    handleLeaveRoom = ()=>{
-        this.props.leaveRoom();
-        this.props.GetRoomsInfo();
+const GameLayout = ({leaveRoom, GetRoomsInfo,classes})=>{
+    const handleLeaveRoom = ()=>{
+        leaveRoom();
+        GetRoomsInfo();
     }
-    render(){
-        const {classes} = this.props;
-        return(
-            <Paper className={classes.gameLayout}>
-                <AppBar className={classes.roomManager}  variant="outlined" position="static">
-                    <Button className={classes.button} onClick={this.handleLeaveRoom}>방 나가기</Button>
-                </AppBar>
-            </Paper>
-        )
-    }
+    return(
+        <Paper className={classes.gameLayout}>
+            <AppBar className={classes.roomManager}  variant="outlined" position="static">
+                <Button className={classes.button} onClick={handleLeaveRoom}>방 나가기</Button>
+            </AppBar>
+        </Paper>
+    )
 }
 
 export default withStyles(styles)(GameLayout);

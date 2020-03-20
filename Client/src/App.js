@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import LoginPage from './Page/LoginPage';
 import MainPage from './Page/MainPage';
 import { withStyles } from '@material-ui/core/styles';
+import { withCookies } from 'react-cookie';
 
 const styles = {
   app: {
@@ -18,42 +19,39 @@ const styles = {
   }
 }
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      login: false,
-      email: 'tester'
-    }
-  }
+const App = ({ cookies,classes }) => {
+  const [login, setLogin] = useState(false);
+  const [email, setEmail] = useState('');
 
-  //로그인
-  handleLogin = (email) => {
-    //나중에 passport.js 이용해서 구현하자 근대 어캐 연결하지??
-    this.setState({
-      login: true,
-      email
-    })
+  const handleLogin = (email) => {
+    cookies.set('email', email, { path: '/' });
+    setEmail(email);
+    setLogin(true);
     return true;
   }
+  
+  useEffect(() => {
+    const getEmail = cookies.get('email');
+    console.log(getEmail);
+    if (getEmail !== undefined) {
+      setEmail(getEmail);
+      setLogin(true);
+    }
+  },[cookies,login]);
+  console.log('make app');
 
-  render() {
-    const { classes } = this.props;
-    const { email, login } = this.state;
-    return (
-      <div className={classes.app}>
-        {login === false
-          ? <LoginPage handleLogin={this.handleLogin} page={'LoginPage'} />
-          : <div className={classes.bodyWrap}>
-              <MainPage
-                email={email}
-              />
-            </div>
-        }
-
-      </div>
-    )
-  }
+  return (
+    <div className={classes.app}>
+      {login === false
+        ? <LoginPage handleLogin={handleLogin}/>
+        : <div className={classes.bodyWrap}>
+          <MainPage
+            email={email}
+          />
+        </div>
+      }
+    </div>
+  );
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(withCookies(App));

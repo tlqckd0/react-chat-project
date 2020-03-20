@@ -1,9 +1,10 @@
-import React from 'react';
+import React,{useState} from 'react';
 import RoomList from './RoomList';
 import { Button, ButtonGroup } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { Paper } from '@material-ui/core'
 import { AppBar } from '@material-ui/core';
+import {CircularProgress} from '@material-ui/core';
 import { withStyles, fade } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -51,49 +52,51 @@ const styles = theme => ({
     },
 })
 
-class RoomLayout extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            search: ''
-        }
-        this.handleValueChange = this.handleValueChange.bind(this);
+const RoomLayout = ({
+    makeRoom,
+    enterRoom, 
+    GetRoomsInfo,
+    rooms,
+    isRoomLoaded,
+    classes
+})=>{
+    const [search,setSearch] = useState('');
+    const handleSearchChange = (e)=>{
+        setSearch(e.target.value);
     }
-    handleValueChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
+
+    /* 방 이름 검색 */
+    const filterRoom = (roomList)=>{
+        return roomList.filter( room=>room.roomName.indexOf(search) >= 0);
     }
-    filterRoom = (roomList) => {
-        const { search } = this.state;
-        return roomList.filter(room => room.roomName.indexOf(search) >= 0);
-    }
-    render() {
-        const { Rooms, GetRoomsInfo, makeRoom, enterRoom, classes } = this.props;
-        const roomsList = this.filterRoom(Rooms);
-        return (
-            <Paper className={classes.roomLayout}>
-                <AppBar className={classes.appBar} variant="outlined" position="static">
-                    <div>
-                        <ButtonGroup className={classes.buttonGroup}>
-                            <Button className={classes.button} onClick={makeRoom}>방만들기</Button>
-                            <Button className={classes.button} onClick={GetRoomsInfo}>새로고침</Button>
-                        </ButtonGroup>
-                        <TextField
-                            className={classes.search}
-                            variant="filled"
-                            name="search"
-                            type="search"
-                            label="방 찾기"
-                            value={this.state.search}
-                            onChange={this.handleValueChange}
-                        />
-                    </div>
-                </AppBar>
-                <RoomList Rooms={roomsList} enterRoom={enterRoom} />
-            </Paper>
-        )
-    }
+    const roomsList = filterRoom(rooms);
+    return (
+        <Paper className={classes.roomLayout}>
+            <AppBar className={classes.appBar} variant="outlined" position="static">
+                <div>
+                    <ButtonGroup className={classes.buttonGroup}>
+                        <Button className={classes.button} onClick={makeRoom}>방만들기</Button>
+                        <Button className={classes.button} onClick={GetRoomsInfo}>새로고침</Button>
+                    </ButtonGroup>
+                    <TextField
+                        className={classes.search}
+                        variant="filled"
+                        name="search"
+                        type="search"
+                        label="방 찾기"
+                        value={search}
+                        onChange={handleSearchChange}
+                    />
+                </div>
+            </AppBar>
+            {isRoomLoaded ?(
+            <RoomList rooms={roomsList} enterRoom={enterRoom} />
+            ):(
+                <CircularProgress/>
+            ) }
+        </Paper>
+    )
 }
+
 
 export default withStyles(styles)(RoomLayout); 

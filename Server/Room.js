@@ -5,7 +5,7 @@ class Room{
         this.numOfPlayer = 0;
         const nsp = io.of(`/${roomNumber}`);
         nsp.on('connect',(socket)=>{
-            socket.broadcast.emit('hi', '누군가 입장했어요!');
+            socket.broadcast.emit('hi', '누군가 입장했어요!ㅋㅋ');
             this.numOfPlayer++;
             socket.on('chat', (msg) => {
                 console.log(`${this.roomNumber}번 방에서 채팅`)

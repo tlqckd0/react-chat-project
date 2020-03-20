@@ -14,6 +14,7 @@ class RoomManager{
     }
     enterRoom = (RoomNum)=>{
         const room = this.Rooms.filter(room=>room.roomNumber == RoomNum)[0];
+        console.log(room);
         const NOP = room.numOfPlayer;
         console.log(`${RoomNum}번 방에 ${NOP}명 사람있음 ㅇㅇ`);
         if(NOP <4){

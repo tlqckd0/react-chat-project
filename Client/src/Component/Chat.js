@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState ,useEffect} from 'react';
 import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-const styles = theme => ({
+const styles = () => ({
     chattingRoom: {
         boxShadow: 'grey 2px 2px 3px,grey -2px -2px 3px',
         display: 'inline-block',
@@ -65,105 +65,91 @@ const styles = theme => ({
     }
 })
 
-class Chat extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            chatKey: 0,
-            message: ''
-        }
-        this.handleValueChange = this.handleValueChange.bind(this);
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+const Chat = ({ sendMessage, chattingMessages,classes }) => {
+    // 메시지 element key
+    let num = 0;
+    const [message, setMessage] = useState('');
+    let messagesEnd = React.createRef();
 
+    const handleMessageInput = (e) => {
+        setMessage(e.target.value);
     }
 
-    handleValueChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-    handleKeyPress = (e) => {
+    const handleKeyPress = (e) => {
         if (e.charCode === 13) {
-            this.handleSendMessage();
+            handleSendMessage();
         }
-        return false;
-    }
-    handleSendMessage = () => {
-        const { sendMessage } = this.props;
-        sendMessage(this.state.message);
-        this.setState({
-            message: ''
-        })
     }
 
-    scrollToBottom = () => {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+    /* 메시지 보내기 */
+    const handleSendMessage = () => {
+        sendMessage(message);
+        setMessage('');
     }
-    componentDidUpdate() {
-        this.scrollToBottom();
+    /* 채팅 메시지 밑으로 내리기 */
+    const scrollToBottom = () => {
+        messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
 
-    render() {
-        const { handleValueChange, handleKeyPress } = this;
-        const { message, chatKey } = this.state;
-        const { classes, chattingMessages } = this.props
-        let num = chatKey;
+    useEffect(()=>{
+        scrollToBottom();
+    });
 
-        const chattingList = chattingMessages.map(
-            (chatting) => {
-                if (chatting.who === 'system') {
-                    return (
-                        <li key={num++} className={classes.systemMsg}>
-                            <Paper>{chatting.message}</Paper>
-                        </li>
-                    )
-                } else if (chatting.who === 'me') {
-                    return (
-                        <li key={num++} className={classes.myMsg}>
-                            <Box>{chatting.who} {chatting.time}<br />
-                                <Box className={classes.Msg}>
-                                    {chatting.message}
-                                </Box>
+
+    /* 메치시 리스트 */
+    const chattingList = chattingMessages.map(
+        (chatting) => {
+            if (chatting.who === 'system') {//시스템신호
+                return (
+                    <li key={num++} className={classes.systemMsg}>
+                        <Paper>{chatting.message}</Paper>
+                    </li>
+                )
+            } else if (chatting.who === 'me') {//내꺼
+                return (
+                    <li key={num++} className={classes.myMsg}>
+                        <Box>{chatting.who} {chatting.time}<br />
+                            <Box className={classes.Msg}>
+                                {chatting.message}
                             </Box>
-                        </li>
-                    )
-                } else {
-                    return (
-                        <li key={num++} className={classes.othersMsg}>
-                            <Box>{chatting.who} {chatting.time}<br />
-                                <Box className={classes.Msg}>
-                                    {chatting.message}
-                                </Box>
+                        </Box>
+                    </li>
+                )
+            } else {
+                return (//남꺼
+                    <li key={num++} className={classes.othersMsg}>
+                        <Box>{chatting.who} {chatting.time}<br />
+                            <Box className={classes.Msg}>
+                                {chatting.message}
                             </Box>
-                        </li>
-                    )
-                }
-
+                        </Box>
+                    </li>
+                )
             }
-        );
+        }
+    );
 
-        return (
-            <Box className={classes.chattingRoom}>
-                <ul className={classes.chattingMessage}>
-                    {chattingList}
-                    <div style={{ float: "left", clear: "both" }}
-                        ref={(el) => { this.messagesEnd = el; }}>
-                    </div>
-                </ul>
-                <div>
-                    <input
-                        className={classes.message}
-                        name="message"
-                        autoComplete="off"
-                        placeholder="채팅해요"
-                        value={message}
-                        onChange={handleValueChange}
-                        onKeyPress={handleKeyPress}
-                    />
+    return (
+        <Box className={classes.chattingRoom}>
+            <ul className={classes.chattingMessage}>
+                {chattingList}
+                <div style={{ float: "left", clear: "both" }}
+                    ref={(el) => { messagesEnd = el; }}>
                 </div>
-            </Box>
-        )
-    }
+            </ul>
+            <div>
+                <input
+                    className={classes.message}
+                    name="message"
+                    autoComplete="off"
+                    placeholder="채팅해요"
+                    value={message}
+                    onChange={handleMessageInput}
+                    onKeyPress={handleKeyPress}
+                />
+            </div>
+        </Box>
+    );
 }
 
 export default withStyles(styles)(Chat); 
